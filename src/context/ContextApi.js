@@ -1,21 +1,21 @@
 import React, { createContext, useState, useEffect } from "react";
-import { fetchDataFromApi } from "../utils/Api";
 
+import { fetchDataFromApi } from "../utils/Api";
 export const Context = createContext();
 
 export const AppContext = (props) => {
     const [loading, setLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState(false);
-    const [selectCategories, setSelectCategories] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("New");
     const [mobileMenu, setMobileMenu] = useState(false);
 
     useEffect(() => {
-        fetchSelectedCategoryData(selectCategories)
-    }, [selectCategories]);
+        fetchSelectedCategoryData(selectedCategory);
+    }, [selectedCategory]);
 
     const fetchSelectedCategoryData = (query) => {
-        setLoading(true)
-        fetchDataFromApi(`search/?q=${query}`).then(({contents}) => {
+        setLoading(true);
+        fetchDataFromApi(`search/?q=${query}`).then(({ contents }) => {
             console.log(contents);
             setSearchResults(contents);
             setLoading(false);
@@ -24,17 +24,17 @@ export const AppContext = (props) => {
 
     return (
         <Context.Provider
-            value = {{
+            value={{
                 loading,
                 setLoading,
                 searchResults,
-                setSelectCategories,
-                selectCategories,
+                selectedCategory,
+                setSelectedCategory,
                 mobileMenu,
                 setMobileMenu,
             }}
         >
-            {props.childern}
+            {props.children}
         </Context.Provider>
     );
 };
